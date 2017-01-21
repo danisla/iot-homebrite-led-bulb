@@ -218,10 +218,13 @@ def main():
 
     http_port = int(os.environ.get("HTTP_PORT", options.http_port))
     device_index = int(os.environ.get("DEVICE_INDEX", options.device_index))
-    ble_mac = os.environ.get("BLE_MAC", options.mac)
+    ble_mac = [x.strip() for x in os.environ.get("BLE_MAC", "").split(" ")]
     ble_pin = os.environ.get("BLE_PIN", options.pin)
 
-    if ble_mac is None:
+    if not ble_mac:
+        ble_mac = options.mac
+
+    if not ble_mac:
         logging.error("No --mac or env BLE_MAC given")
         sys.exit(1)
 
