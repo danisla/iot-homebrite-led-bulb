@@ -4,9 +4,11 @@ The ST hub cannot control BLE devices so this lets you create a bridge using a C
 
 ## Setup
 
-First, use the mobile app to create a pin and add all of your lights to a group.
+First, make sure you use the HomeBrite mobile app to create a pin and add all of your lights to a group.
 
-### Install and run with resin.io
+### Install bridge on Raspberry Pi 3 with resin.io
+
+Create an account and new device on [resin.io](http://resin.io), download the ResinOS to your RPI3.
 
 ```
 git remote add resin username@git.resin.io:username/devicename.git
