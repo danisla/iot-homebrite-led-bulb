@@ -20,7 +20,7 @@ git remote add resin username@git.resin.io:username/devicename.git
 git push resin master
 ```
 
-### Install controller on CHIP/RPI with systemd
+### (non resin.io) Install with systemd
 
 ```
 sudo apt-get install -y python-twisted libglib2.0-dev
