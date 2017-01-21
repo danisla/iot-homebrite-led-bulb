@@ -209,22 +209,27 @@ def main():
     import sys
 
     arg_proc = argparse.ArgumentParser(description='Implements a RESTful Remote for the SmartThings hub')
-    arg_proc.add_argument('--httpport', dest='http_port', help='HTTP port number', default=8080, type=int)
-    arg_proc.add_argument('--deviceindex', dest='device_index', help='Device index', default=1, type=int)
-    arg_proc.add_argument('--mac', dest='mac', help='One or more BLE MAC addresses, random one is picked.', type=str, nargs='+')
-    arg_proc.add_argument('--pin', dest='pin', help='Light PIN', type=int)
+    arg_proc.add_argument('--httpport', dest='http_port', help='HTTP port number or env HTTP_PORT, default is 8080', default=8080, type=int)
+    arg_proc.add_argument('--deviceindex', dest='device_index', help='Device index or env DEVICE_INDEX, default is 1', default=1, type=int)
+    arg_proc.add_argument('--mac', dest='mac', help='One or more BLE MAC addresses, random one is picked. Or env BLE_MAC', type=str, nargs='+')
+    arg_proc.add_argument('--pin', dest='pin', help='Light PIN or env BLE_PIN', type=int)
     arg_proc.add_argument('--debug', dest='debug', help='Enable debug messages', default=False, action='store_true')
     options = arg_proc.parse_args()
 
-    if options.mac is None:
-        logging.error("No --mac given")
+    http_port = int(os.environ.get("HTTP_PORT", options.http_port))
+    device_index = int(os.environ.get("DEVICE_INDEX", options.device_index))
+    ble_mac = os.environ.get("BLE_MAC", options.mac)
+    ble_pin = os.environ.get("BLE_PIN", options.pin)
+
+    if ble_mac is None:
+        logging.error("No --mac or env BLE_MAC given")
         sys.exit(1)
 
-    if options.pin is None:
-        logging.error("No --pin given")
+    if ble_pin is None:
+        logging.error("No --pin or env BLE_PIN given")
         sys.exit(1)
 
-    device_target = 'urn:schemas-upnp-org:device:DimmableLight:%d' % (options.device_index)
+    device_target = 'urn:schemas-upnp-org:device:DimmableLight:%d' % (device_index)
     log_level = logging.INFO
     if options.debug:
         log_level = logging.DEBUG
@@ -234,14 +239,14 @@ def main():
     logging.info('Initializing CSRMesh Light Controller')
 
     # SSDP server to handle discovery
-    SSDPServer(status_port=options.http_port, device_target=device_target)
+    SSDPServer(status_port=http_port, device_target=device_target)
 
     # HTTP site to handle subscriptions/polling
-    light_api = CSRMeshLightApi(device_target, options.mac, options.pin)
+    light_api = CSRMeshLightApi(device_target, ble_mac, ble_pin)
     dev_api = server.Site(light_api)
-    reactor.listenTCP(options.http_port, dev_api)
+    reactor.listenTCP(http_port, dev_api)
 
-    logging.info('Initialization complete, listening on HTTP port %s' % (options.http_port))
+    logging.info('Initialization complete, listening on HTTP port %s' % (http_port))
 
     reactor.run() # pylint: disable=no-member
 
