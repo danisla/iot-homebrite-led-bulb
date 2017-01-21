@@ -1,0 +1,14 @@
+[Unit]
+Description=RESTful CSRMesh Light Controller
+
+[Service]
+Restart=always
+TimeoutStartSec=0
+RestartSec=3
+EnvironmentFile=/etc/csrmesh_lights.env
+WorkingDirectory=/opt/ssdp-smartthings/homebrite_led_bulb
+ExecStartPre=-/usr/sbin/i2cset -f -y 0 0x34 0x93 0x0
+ExecStart=/bin/bash -c '/usr/bin/python /opt/ssdp-smartthings/homebrite_led_bulb/upnp-csrmesh-dimmable-light.py --httpport 8282 --deviceindex 1 --mac ${BLE_ADDRESSES} --pin ${BLE_PIN}'
+
+[Install]
+WantedBy=multi-user.target
