@@ -33,4 +33,4 @@ COPY . ./
 ENV INITSYSTEM=on
 
 # Run script when the container starts up on the device
-CMD ["/usr/local/bin/python", "/usr/src/app/upnp-csrmesh-dimmable-light.py"]
+CMD ["/bin/bash", "-c", "/usr/src/app/blue_init.sh && /usr/local/bin/python /usr/src/app/upnp-csrmesh-dimmable-light.py"]
