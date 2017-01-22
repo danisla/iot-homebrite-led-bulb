@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  app:
+    build: .
+    privileged: true
+    network_mode: host
+    env_file: .env
+    tty: true
+    restart: always
