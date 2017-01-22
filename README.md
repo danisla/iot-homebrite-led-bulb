@@ -42,6 +42,28 @@ sudo systemctl enable csrmesh-lights
 sudo systemctl start csrmesh-lights
 ```
 
+### or with docker-compose on HypriotOS with RPI3
+
+Install [HypriotOS](https://blog.hypriot.com/downloads/) on your Raspberry Pi 3
+
+```
+git clone https://github.com/danisla/iot-homebrite-led-bulb.git
+```
+
+```
+cd iot-homebrite-led-bulb
+cat > .env <<"EOF"
+BLE_MAC=SPACE SEPARATED MAC ADDRESS LIST
+BLE_PIN=YOUR_PIN
+DEVICE_INDEX=1
+HTTP_PORT=8282
+EOF
+```
+
+```
+docker-compose up -d
+```
+
 ## Add to SmartThings app
 
 From the [SmartThings developer portal](graph.api.smartthings.com), add the devicetype and control app groovy sources found in the [`./smartthings`](./smartthings) directory. Make sure to publish them after copy-pasting.

@@ -3,6 +3,7 @@ version: '2'
 services:
   app:
     build: .
+    image: docker.io/danisla/iot-homebrite-led-bulb:latest
     privileged: true
     network_mode: host
     env_file: .env
