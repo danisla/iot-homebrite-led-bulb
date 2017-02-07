@@ -142,17 +142,18 @@ class CSRMeshLightApi(resource.Resource):
             return "OK"
 
         elif request.path == '/light_level':
-            self.level = (255/(100/int(request.args["level"][0])))
+            in_level = int(float(request.args["level"][0]))
+            self.level = int((in_level/100.0) * 255)
             self.set_brightness(self.level)
             return "OK"
 
         elif request.path == '/light_bright':
-            self.level = min(self.level + 25, 100)
+            self.level = min(self.level + 50, 255)
             self.set_brightness(self.level)
             return "OK"
 
         elif request.path == '/light_dim':
-            self.level = max(self.level - 25, 0)
+            self.level = max(self.level - 50, 0)
             self.set_brightness(self.level)
             return "OK"
 
